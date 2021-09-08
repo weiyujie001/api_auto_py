@@ -2,6 +2,8 @@ import string
 import random
 import datetime
 from dateutil.relativedelta import relativedelta
+from faker import Faker
+
 
 
 def random_str(str_len):
@@ -23,6 +25,18 @@ def random_int(scope):
     :param scope: 数据范围
     :return:
     """
+    # try:
+    #     start_num, end_num =scope.split(",")
+    #     start_num = int(start_num)
+    #     end_num = int(end_num)
+    # except ValueError:
+    #     raise Exception("调用随机整数失败，[ %s ]范围参数有误" %scope)
+    # if start_num <= end_num:
+    #     number = random.randint(start_num, end_num)
+    # else:
+    #     number = random.randint(end_num, start_num)
+    # return number
+    fake = Faker("zh_CN")
     try:
         start_num, end_num =scope.split(",")
         start_num = int(start_num)
@@ -30,10 +44,11 @@ def random_int(scope):
     except ValueError:
         raise Exception("调用随机整数失败，[ %s ]范围参数有误" %scope)
     if start_num <= end_num:
-        number = random.randint(start_num, end_num)
+        number = fake.random_int(min=start_num,max=end_num)
     else:
-        number = random.randint(end_num, start_num)
+        number = fake.random_int(min=end_num,max=start_num)
     return number
+
 
 
 def random_float(data):
@@ -116,3 +131,53 @@ def genrate_datetime(expr=''):
     else:
         return now
 
+def generate_timestamp(expr=''):
+    """
+    生成时间戳
+    :param expr: 日期表达式。如“d-1”代表日期减1
+    :return:
+    """
+    datatime_obj = generate_timestamp(expr)
+    return int(datetime.datetime.timestamp(datatime_obj)) * 1000
+
+def genrate_guid():
+    """
+    基于MAC地址+时间戳+随机数来生成GUID
+    :return:
+    """
+    import uuid
+    return str(uuid.uuid1()).upper()
+
+def generate_wxid():
+    """
+    基于AUTO标识+26位英文字母大小写+ 数字生成伪微信ID
+    :return:
+    """
+    return 'AUTO' + ''.join(random.sample(string.ascii_letters + string.digits,24))
+
+def genrate_noid(expr=''):
+    """
+    基于6位随机数字+出生日期+4位随机数生成伪身份证
+    :param expr:
+    :return:
+    """
+    # birthday = generate_date(expr)
+    # birthday = str(birthday).replace('-','')
+    # return int(str(random.randint(100000, 999999)) + birthday + str(random.randint(1000,9999)))
+
+    fake = Faker("zh_CN")
+    return fake.ssn(min_age=18, max_age=90)
+
+def generate_phone():
+    """
+    基于三大运营商号段+随机数生成伪手机号
+    :return:
+    """
+    fake = Faker("zh_CN")
+    return  fake.phone_number()
+
+
+if __name__ == '__main__':
+    print(generate_phone())
+    print(random_int("100,200"))
+    print(random_int("200,100"))

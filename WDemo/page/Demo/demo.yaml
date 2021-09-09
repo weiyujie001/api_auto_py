@@ -1,0 +1,20 @@
+test_info:
+  title: Demo测试
+  cookies: false
+  premise: false
+  parameters:
+    name-country-country_code-country_population: Demo.csv
+test_case:
+   request:
+      url: /chapter03/requset_body/city
+      method: POST
+      json:
+        name: $name
+        country: $country
+        country_code: $country_code
+        country_population: $country_population
+   check_body:
+      check_type: check_json
+      expected_code: 200
+      expected_result: addAudltCard_response.json
+   extract: None

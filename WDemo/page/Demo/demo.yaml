@@ -1,11 +1,29 @@
 test_info:
   title: Demo测试
-  cookies: false
-  premise: false
-  parameters:
-    name-country-country_code-country_population: Demo.csv
+  variables: None
+
 test_case:
-   request:
+  - name:  正常测试
+    request:
+      header: None
+      url: /chapter03/requset_body/city
+      method: POST
+      json:
+        name: Shanghai
+        country: China
+        country_code: CN
+        country_population: 14000000000000
+    check_body:
+      - eq: [contest.code,200]
+      - eq: [contest.msg,'成功']
+      # 契约测试的路径是否首次写入 validation 是否校验，First-write是否第一次根据结果写入契约
+    Contract-validation:
+       path: demo.json
+       validation: False
+       First-write: True
+    extract: None
+  - name: 缺少参数
+    request:
       url: /chapter03/requset_body/city
       method: POST
       json:
@@ -13,8 +31,8 @@ test_case:
         country: $country
         country_code: $country_code
         country_population: $country_population
-   check_body:
-      check_type: check_json
-      expected_code: 200
-      expected_result: addAudltCard_response.json
-   extract: None
+    check_body:
+        check_type: check_json
+        expected_code: 200
+        expected_result: addAudltCard_response.json
+    extract: None
